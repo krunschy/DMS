@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  app:
+    build: .  # This uses the Dockerfile to build the Spring Boot application
+    container_name: dms-app
+    ports:
+      - "8081:8081"  # Exposes the application on port 8081 (host:container)
+    depends_on:
+      - postgres  # Waits for PostgreSQL to be ready before starting
+      - rabbitmq  # Waits for RabbitMQ to be ready before starting
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/dmsdb
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_RABBITMQ_HOST: rabbitmq
+    networks:
+      - dms-network
+
+  postgres:
+    image: postgres:15
+    container_name: dms-db
+    restart: always
+    environment:
+      POSTGRES_DB: dmsdb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    networks:
+      - dms-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: dms-mq
+    ports:
+      - "5672:5672"  # RabbitMQ communication
+      - "15672:15672"  # Management UI
+    networks:
+      - dms-network
+
+networks:
+  dms-network:
+    driver: bridge

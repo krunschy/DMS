@@ -1,0 +1,14 @@
+# Step 1: Use a JDK 17 image as the base image to build and run the Spring Boot app
+FROM openjdk:17-jdk-slim AS build
+
+# Step 2: Set the working directory for the app in the container
+WORKDIR /app
+
+# Step 3: Copy the JAR file from the target directory to the container
+COPY target/*.jar app.jar
+
+# Step 4: Run the Spring Boot application using the JAR file
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+
+# Step 5: Expose port 8080 to allow external access to the application
+EXPOSE 8080
