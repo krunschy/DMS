@@ -10,3 +10,12 @@ Dem bin ich vor allem gefolgt für sprint 3. Also die routes sind
   GET: holt den Eintrag
   PUT: updated den Eintrag, braucht json im body
   DELETE: löscht den Eintrag
+
+
+check die datenbank mit
+docker exec -it dms-db psql -U user -d dmsdb
+select * from pdfs;
+
+
+"npm run dev" um das frontent zu entwickeln
+"npm run build" before docker compose

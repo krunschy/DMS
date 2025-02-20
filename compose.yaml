@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   app:
-    build: .  # This uses the Dockerfile to build the Spring Boot application
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: dms-app
     ports:
       - "8081:8081"  # Exposes the application on port 8081 (host:container)
@@ -14,6 +16,18 @@ services:
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_RABBITMQ_HOST: rabbitmq
+    networks:
+      - dms-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: dms-frontend
+    ports:
+      - "80:80"  # Serve on port 80
+    depends_on:
+      - app
     networks:
       - dms-network
 
