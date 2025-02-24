@@ -8,6 +8,7 @@ import at.technikum.swkom.dms.repository.PDFentryRepository;
 import at.technikum.swkom.dms.service.PDFentryService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import at.technikum.swkom.dms.RabbitMQ.messaging.RabbitMQSender;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,12 +16,18 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class PDFentryServiceImpl implements PDFentryService {
+
     private PDFentryRepository pdfentryRepository;
+    private final RabbitMQSender rabbitMQSender;
 
     @Override
     public PDFentryDto createPDFentry(PDFentryDto pdFentryDto) {
         PDFentry pdFentry = PDFentryMapper.mapToPDFentry(pdFentryDto);
         PDFentry savedPDFentry = pdfentryRepository.save(pdFentry);
+
+        String message = "New PDF uploaded: " + savedPDFentry.getFileName();
+        rabbitMQSender.sendMessage(message);
+
         return PDFentryMapper.mapToPDFentryDto(savedPDFentry);
     }
 

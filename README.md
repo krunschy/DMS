@@ -19,3 +19,5 @@ select * from pdfs;
 
 "npm run dev" um das frontent zu entwickeln
 "npm run build" before docker compose
+
+./mvnw package -DskipTests   um das backend zu baun, skiptests is wichtig, weils sonst keine db hat

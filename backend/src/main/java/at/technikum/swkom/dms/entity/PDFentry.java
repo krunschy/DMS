@@ -28,4 +28,10 @@ public class PDFentry {
 
     @Column(name = "fileSize")
     private String fileSize;
+
+    @Column(name = "fileContent")
+    private String fileContent;
+
+    @Column(name = "fileURL")
+    private String fileURL;
 }

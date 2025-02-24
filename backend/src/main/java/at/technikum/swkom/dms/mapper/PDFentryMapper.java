@@ -10,7 +10,9 @@ public class PDFentryMapper {
                 pdfentry.getId(),
                 pdfentry.getFileName(),
                 pdfentry.getUploadDate(),
-                pdfentry.getFileSize()
+                pdfentry.getFileSize(),
+                pdfentry.getFileContent(),
+                pdfentry.getFileURL()
         );
     }
 
@@ -20,7 +22,9 @@ public class PDFentryMapper {
                 pdfentryDto.getId(),
                 pdfentryDto.getFileName(),
                 pdfentryDto.getUploadDate(),
-                pdfentryDto.getFileSize()
+                pdfentryDto.getFileSize(),
+                pdfentryDto.getFileContent(),
+                pdfentryDto.getFileURL()
         );
     }
 }

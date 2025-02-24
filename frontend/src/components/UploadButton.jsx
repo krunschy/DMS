@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { uploadMetadata } from "../services/pdfService"; // Import service
+import { uploadPDF } from "../services/PDFService"; // Updated to upload PDF file
 
 const UploadPDFButton = () => {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -8,14 +8,7 @@ const UploadPDFButton = () => {
         const file = event.target.files[0]; // Get the selected file
         if (!file) return;
 
-        // Extract metadata
-        const metadata = {
-            name: file.name,
-            size: (file.size / 1024).toFixed(2) + " KB", // Convert bytes to KB
-            uploadTime: new Date().toISOString(), // Store as ISO string
-        };
-
-        setSelectedFile(metadata);
+        setSelectedFile(file); // Set the file itself, not just metadata
     };
 
     const handleUploadClick = async () => {
@@ -25,11 +18,12 @@ const UploadPDFButton = () => {
         }
 
         try {
-            await uploadMetadata(selectedFile); // Call the service
+            await uploadPDF(selectedFile); // Call service to upload the actual file
+            alert("PDF uploaded successfully!");
             window.location.reload();
         } catch (error) {
-            console.error("Error uploading metadata:", error);
-            alert("Failed to upload metadata.");
+            console.error("Error uploading file:", error);
+            alert("Failed to upload file.");
         }
     };
 
@@ -37,7 +31,6 @@ const UploadPDFButton = () => {
         <div>
             <input type="file" accept="application/pdf" onChange={handleFileChange} />
             <button onClick={handleUploadClick}>Upload PDF</button>
-
         </div>
     );
 };

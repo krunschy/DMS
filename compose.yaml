@@ -41,6 +41,8 @@ services:
       POSTGRES_PASSWORD: password
     ports:
       - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - dms-network
 
@@ -49,10 +51,37 @@ services:
     container_name: dms-mq
     ports:
       - "5672:5672"  # RabbitMQ communication
-      - "15672:15672"  # Management UI
+      - "9093:15672"  # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: "user"
+      RABBITMQ_DEFAULT_PASS: "password"
+    networks:
+      - dms-network
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    ports:
+      - "9000:9000" # MinIO
+      - "9090:9001" # MinIO Console
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
     networks:
       - dms-network
 
 networks:
   dms-network:
     driver: bridge
+
+volumes:
+  minio_data:
+    name: minio_data
+    driver: local
+  postgres_data:
+    name: postgres_data
+    driver: local

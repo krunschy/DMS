@@ -11,21 +11,23 @@ export const deletePDF = (pdfId) => {
     return axios.delete(`${REST_API_BASE_URL}/${pdfId}`);
 };
 
-export const uploadMetadata = (file) => {
-    const date = new Date();
-    const formattedDate = `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`;
+export const uploadPDF = (file) => {
+    const date = new Date(); // Fix: Define date
 
-    const metadata = {
-        fileName: file.name,
-        uploadDate: formattedDate,   // upload date as a string in dd.mm.yyyy format
-        fileSize: file.size.toString(),  // file size as a string
-    };
+    const formData = new FormData();
+    formData.append("pdfFile", file);
+    formData.append("fileName", file.name);
+    formData.append("fileSize", (file.size / 1024).toFixed(2) + " KB");
+    formData.append("uploadDate", `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`);
 
-    return axios.post(REST_API_BASE_URL, metadata)
-        .then(response => {
-            return response.data;
-        })
+    return axios.post("http://localhost:8081/api/PDFentries", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        }
+    })
+        .then(response => response.data)
         .catch(error => {
+            console.error("Upload error:", error.response ? error.response.data : error.message);
             throw error;
         });
 };

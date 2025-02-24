@@ -15,4 +15,6 @@ public class PDFentryDto {
     private String fileName;
     private String uploadDate;
     private String fileSize;
+    private String fileContent;
+    private String fileURL;
 }
