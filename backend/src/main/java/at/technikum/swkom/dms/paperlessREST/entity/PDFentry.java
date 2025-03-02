@@ -1,4 +1,4 @@
-package at.technikum.swkom.dms.entity;
+package at.technikum.swkom.dms.paperlessREST.entity;
 
 
 import jakarta.persistence.*;
@@ -32,6 +32,6 @@ public class PDFentry {
     @Column(name = "fileContent")
     private String fileContent;
 
-    @Column(name = "fileURL")
+    @Column(name = "fileURL", unique = true)
     private String fileURL;
 }

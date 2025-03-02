@@ -1,7 +1,6 @@
-package at.technikum.swkom.dms.service;
+package at.technikum.swkom.dms.paperlessREST.service;
 
-import at.technikum.swkom.dms.dto.PDFentryDto;
-import at.technikum.swkom.dms.entity.PDFentry;
+import at.technikum.swkom.dms.paperlessREST.dto.PDFentryDto;
 
 import java.util.List;
 
@@ -15,4 +14,6 @@ public interface PDFentryService {
     PDFentryDto updatePDFentryById(Long PDFentryId, PDFentryDto updatedPDFentry);
 
     void deletePDFentry(Long PDFentryId);
+
+    void listenToOCRResults(String message);
 }

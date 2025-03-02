@@ -1,9 +1,8 @@
-package at.technikum.swkom.dms.controller;
+package at.technikum.swkom.dms.paperlessREST.controller;
 
-import at.technikum.swkom.dms.dto.PDFentryDto;
-import at.technikum.swkom.dms.entity.PDFentry;
+import at.technikum.swkom.dms.paperlessREST.dto.PDFentryDto;
 import at.technikum.swkom.dms.minio.MinioService;
-import at.technikum.swkom.dms.service.PDFentryService;
+import at.technikum.swkom.dms.paperlessREST.service.PDFentryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +33,6 @@ public class PDFentryController {
             @RequestParam("fileName") String fileName,
             @RequestParam("fileSize") String fileSize,
             @RequestParam("uploadDate") String uploadDate) {
-
-        try {
             // Upload the PDF file to MinIO
             String fileUrl = minioService.uploadFile(pdfFile);
 
@@ -44,10 +41,6 @@ public class PDFentryController {
             pdfEntryService.createPDFentry(savedPDFentry);
 
             return new ResponseEntity<>("File uploaded successfully: " + fileUrl, HttpStatus.CREATED);
-
-        } catch (IOException e) {
-            return new ResponseEntity<>("File upload failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
 

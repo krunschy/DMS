@@ -1,4 +1,4 @@
-package at.technikum.swkom.dms.dto;
+package at.technikum.swkom.dms.paperlessREST.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -20,11 +20,7 @@ export const uploadPDF = (file) => {
     formData.append("fileSize", (file.size / 1024).toFixed(2) + " KB");
     formData.append("uploadDate", `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`);
 
-    return axios.post("http://localhost:8081/api/PDFentries", formData, {
-        headers: {
-            "Content-Type": "multipart/form-data",
-        }
-    })
+    return axios.post("http://localhost:8081/api/PDFentries", formData)
         .then(response => response.data)
         .catch(error => {
             console.error("Upload error:", error.response ? error.response.data : error.message);

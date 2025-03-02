@@ -1,7 +1,7 @@
-package at.technikum.swkom.dms.mapper;
+package at.technikum.swkom.dms.paperlessREST.mapper;
 
-import at.technikum.swkom.dms.dto.PDFentryDto;
-import at.technikum.swkom.dms.entity.PDFentry;
+import at.technikum.swkom.dms.paperlessREST.dto.PDFentryDto;
+import at.technikum.swkom.dms.paperlessREST.entity.PDFentry;
 
 public class PDFentryMapper {
 

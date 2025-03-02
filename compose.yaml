@@ -1,10 +1,11 @@
 version: '3.8'
 
 services:
+  # API Service
   app:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.api
     container_name: dms-app
     ports:
       - "8081:8081"  # Exposes the application on port 8081 (host:container)
@@ -19,6 +20,7 @@ services:
     networks:
       - dms-network
 
+  # Frontend Service
   frontend:
     build:
       context: ./frontend
@@ -31,6 +33,7 @@ services:
     networks:
       - dms-network
 
+  # PostgreSQL Database
   postgres:
     image: postgres:15
     container_name: dms-db
@@ -46,6 +49,7 @@ services:
     networks:
       - dms-network
 
+  # RabbitMQ Service
   rabbitmq:
     image: rabbitmq:3-management
     container_name: dms-mq
@@ -58,6 +62,7 @@ services:
     networks:
       - dms-network
 
+  # MinIO Service
   minio:
     image: minio/minio:latest
     container_name: minio
@@ -71,6 +76,24 @@ services:
       - minio_data:/data
     command: server /data --console-address ":9001"
     restart: unless-stopped
+    networks:
+      - dms-network
+
+  # OCR Worker Service
+  ocr-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.ocr  # Reference the OCR-specific Dockerfile
+    container_name: dms-ocr-worker
+    depends_on:
+      - rabbitmq  # The OCR worker may be waiting for RabbitMQ to be available
+      - minio     # If OCR interacts with MinIO for file storage
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+      MINIO_ENDPOINT: minio:9000  # MinIO connection info
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin123
+      SPRING_PROFILES_ACTIVE: ocr  # Activate the OCR profile
     networks:
       - dms-network
 
