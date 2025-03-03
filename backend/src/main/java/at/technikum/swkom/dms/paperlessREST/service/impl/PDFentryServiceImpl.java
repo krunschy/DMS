@@ -51,9 +51,10 @@ public class PDFentryServiceImpl implements PDFentryService {
     public PDFentryDto updatePDFentryById(Long PDFentryId, PDFentryDto updatedPDFentry) {
         PDFentry pdfentry = pdfentryRepository.findById(PDFentryId)
                 .orElseThrow(() -> new ResurceNotFoundException("PDF with Id: " + PDFentryId +" does not exist"));
-        pdfentry.setFileName(updatedPDFentry.getFileName());
-        pdfentry.setUploadDate(updatedPDFentry.getUploadDate());
-        pdfentry.setFileSize(updatedPDFentry.getFileSize());
+        //pdfentry.setFileName(updatedPDFentry.getFileName());
+        //pdfentry.setUploadDate(updatedPDFentry.getUploadDate());
+        //pdfentry.setFileSize(updatedPDFentry.getFileSize());
+        pdfentry.setFileContent(updatedPDFentry.getFileContent());
         PDFentry updatedPDFentryObj = pdfentryRepository.save(pdfentry);
         return PDFentryMapper.mapToPDFentryDto(updatedPDFentryObj);
     }

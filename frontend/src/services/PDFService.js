@@ -27,3 +27,7 @@ export const uploadPDF = (file) => {
             throw error;
         });
 };
+
+export const updatePDF = (pdf) => {
+    return axios.put(`${REST_API_BASE_URL}/${pdf.id}`, pdf);
+};
