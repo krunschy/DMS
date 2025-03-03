@@ -42,7 +42,8 @@ public class OCRService {
 
         // Use ProcessBuilder to execute the Ghostscript command
         ProcessBuilder processBuilder = new ProcessBuilder(
-                "gs", "-dNOPAUSE", "-dBATCH", "-sDEVICE=pngalpha",
+                "gs", "-dNOPAUSE", "-dBATCH", "-sDEVICE=png16m", // Use png16m for better image quality
+                "-r500", // Increase DPI to 300 (adjust as needed)
                 "-sOutputFile=" + outputImagePath, tempPdf.getAbsolutePath()
         );
 

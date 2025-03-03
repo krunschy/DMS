@@ -7,20 +7,20 @@ import SearchBar from './components/SearchBar.jsx';
 function App() {
     return (
         <>
-            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+            <div style={{textAlign: 'center', marginBottom: '20px'}}>
                 <h2>List of PDFs</h2>
             </div>
 
-            <div style={{ marginBottom: '20px' }}>
-                <SearchBar />
+            <div style={{marginBottom: '20px'}}>
+                <SearchBar/>
             </div>
 
-            <div style={{ marginBottom: '20px' }}>
-                <ListPDFComponent />
+            <div style={{marginBottom: '20px', display: "flex", width: "100%"}}>
+                <ListPDFComponent/>
             </div>
 
             <div>
-                <UploadButton />
+                <UploadButton/>
             </div>
         </>
     );

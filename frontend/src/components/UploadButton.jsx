@@ -19,7 +19,6 @@ const UploadPDFButton = () => {
 
         try {
             await uploadPDF(selectedFile); // Call service to upload the actual file
-            alert("PDF uploaded successfully!");
             window.location.reload();
         } catch (error) {
             console.error("Error uploading file:", error);
