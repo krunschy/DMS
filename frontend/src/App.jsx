@@ -11,10 +11,6 @@ function App() {
                 <h2>List of PDFs</h2>
             </div>
 
-            <div style={{marginBottom: '20px'}}>
-                <SearchBar/>
-            </div>
-
             <div style={{marginBottom: '20px', display: "flex", width: "100%"}}>
                 <ListPDFComponent/>
             </div>

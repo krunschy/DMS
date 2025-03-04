@@ -1,15 +1,21 @@
-// src/components/SearchBar.js
 import React, { useState } from "react";
+import { searchPDFs } from "../services/PDFService";  // Import the searchPDFs service function
 
-const SearchBar = () => {
+const SearchBar = ({ onSearchResults }) => {
     const [searchText, setSearchText] = useState("");
 
     const handleSearchChange = (event) => {
-        setSearchText(event.target.value);  // Update the state with input value
+        setSearchText(event.target.value);  // Update state with search input
     };
 
     const handleSearchClick = () => {
-        alert(`You searched for: ${searchText}`);  // Show the text in an alert
+        searchPDFs(searchText)  // Call searchPDFs with the search text
+            .then((data) => {
+                onSearchResults(data);  // Pass the search results to the parent component
+            })
+            .catch((error) => {
+                console.error("Error searching PDFs:", error);
+            });
     };
 
     return (

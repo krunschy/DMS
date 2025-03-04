@@ -15,6 +15,11 @@ import at.technikum.swkom.dms.RabbitMQ.messaging.RabbitMQSender;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import at.technikum.swkom.dms.ElasticSearch.model.PDFDocument;
+import at.technikum.swkom.dms.ElasticSearch.service.PDFDocumentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class PDFentryServiceImpl implements PDFentryService {
@@ -22,12 +27,24 @@ public class PDFentryServiceImpl implements PDFentryService {
     private PDFentryRepository pdfentryRepository;
     private final RabbitMQSender rabbitMQSender;
     private final MinioService minioService;
+    private final PDFDocumentService pdfDocumentService;
 
     @Override
     public PDFentryDto createPDFentry(PDFentryDto pdFentryDto) {
         PDFentry pdFentry = PDFentryMapper.mapToPDFentry(pdFentryDto);
         PDFentry savedPDFentry = pdfentryRepository.save(pdFentry);
 
+        // Sync with Elasticsearch
+        PDFDocument pdfDocument = new PDFDocument(
+                savedPDFentry.getId().toString(),
+                savedPDFentry.getFileName(),
+                savedPDFentry.getUploadDate(),
+                savedPDFentry.getFileSize(),
+                savedPDFentry.getFileContent(),
+                savedPDFentry.getFileURL()
+        );
+
+        pdfDocumentService.save(pdfDocument);
         rabbitMQSender.sendOCRJob(savedPDFentry.getFileURL());
 
         return PDFentryMapper.mapToPDFentryDto(savedPDFentry);
@@ -51,11 +68,20 @@ public class PDFentryServiceImpl implements PDFentryService {
     public PDFentryDto updatePDFentryById(Long PDFentryId, PDFentryDto updatedPDFentry) {
         PDFentry pdfentry = pdfentryRepository.findById(PDFentryId)
                 .orElseThrow(() -> new ResurceNotFoundException("PDF with Id: " + PDFentryId +" does not exist"));
-        //pdfentry.setFileName(updatedPDFentry.getFileName());
-        //pdfentry.setUploadDate(updatedPDFentry.getUploadDate());
-        //pdfentry.setFileSize(updatedPDFentry.getFileSize());
         pdfentry.setFileContent(updatedPDFentry.getFileContent());
         PDFentry updatedPDFentryObj = pdfentryRepository.save(pdfentry);
+
+        //for elasticsearch
+        PDFDocument pdfDocument = new PDFDocument(
+                updatedPDFentryObj.getId().toString(),
+                updatedPDFentryObj.getFileName(),
+                updatedPDFentryObj.getUploadDate(),
+                updatedPDFentryObj.getFileSize(),
+                updatedPDFentryObj.getFileContent(),
+                updatedPDFentryObj.getFileURL()
+        );
+        pdfDocumentService.save(pdfDocument);
+
         return PDFentryMapper.mapToPDFentryDto(updatedPDFentryObj);
     }
 
@@ -72,6 +98,9 @@ public class PDFentryServiceImpl implements PDFentryService {
 
         // Delete from database
         pdfentryRepository.deleteById(PDFentryId);
+
+        // Delete from Elasticsearch
+        pdfDocumentService.deleteById(PDFentryId.toString());
 
         System.out.println("Deleted PDF entry and file: " + fileUrl);
     }
@@ -117,7 +146,18 @@ public class PDFentryServiceImpl implements PDFentryService {
         pdfentry.setFileContent(extractedText);
 
         // Save the updated entry back to the database
-        pdfentryRepository.save(pdfentry);
+        PDFentry updatedEntry = pdfentryRepository.save(pdfentry);
+
+        // Update in Elasticsearch
+        PDFDocument pdfDocument = new PDFDocument(
+                updatedEntry.getId().toString(),
+                updatedEntry.getFileName(),
+                updatedEntry.getUploadDate(),
+                updatedEntry.getFileSize(),
+                updatedEntry.getFileContent(),
+                updatedEntry.getFileURL()
+        );
+        pdfDocumentService.save(pdfDocument);
 
         System.out.println("Updated OCR result for file URL: " + fileURL);
     }

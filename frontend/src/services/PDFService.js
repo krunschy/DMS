@@ -6,13 +6,12 @@ export const listPDFs = () => {
     return axios.get(REST_API_BASE_URL);
 }
 
-// Function to delete a PDF by ID
 export const deletePDF = (pdfId) => {
     return axios.delete(`${REST_API_BASE_URL}/${pdfId}`);
 };
 
 export const uploadPDF = (file) => {
-    const date = new Date(); // Fix: Define date
+    const date = new Date();
 
     const formData = new FormData();
     formData.append("pdfFile", file);
@@ -30,4 +29,17 @@ export const uploadPDF = (file) => {
 
 export const updatePDF = (pdf) => {
     return axios.put(`${REST_API_BASE_URL}/${pdf.id}`, pdf);
+};
+
+export const searchPDFs = (searchText) => {
+    return axios.get(`${REST_API_BASE_URL}/search`, {
+        params: { query: searchText }
+    })
+        .then((response) => {
+            return response.data;  // Return the list of matching PDFs
+        })
+        .catch((error) => {
+            console.error("Error searching PDFs:", error.response ? error.response.data : error.message);
+            throw error;
+        });
 };

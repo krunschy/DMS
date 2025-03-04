@@ -97,6 +97,38 @@ services:
     networks:
       - dms-network
 
+
+  # Elasticsearch Service
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.28
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=true  # Enable security
+      - ELASTIC_PASSWORD=yourpassword  # Set the password for the "elastic" superuser (or the default user)
+      - ELASTICSEARCH_USERNAME=elastic  # You can still use "elastic" for other purposes
+    ports:
+      - "9200:9200"  # REST API
+      - "9300:9300"  # Internal communication
+    networks:
+      - dms-network  # Network name here
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.28
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200  # Connect Kibana to Elasticsearch
+      - ELASTICSEARCH_USERNAME=elastic  # Username for authentication
+      - ELASTICSEARCH_PASSWORD=yourpassword  # Password for authentication
+    ports:
+      - "5601:5601"
+    networks:
+      - dms-network  # Network name here
+    depends_on:
+      - elasticsearch
+
+
 networks:
   dms-network:
     driver: bridge

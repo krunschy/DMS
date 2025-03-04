@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { listPDFs, deletePDF } from "../services/PDFService.js";
 import PDFEditorComponent from "./PDFEditorComponent.jsx";
+import SearchBar from "./SearchBar.jsx";  // Import SearchBar
 
 const ListPDFComponent = () => {
     const [pdfentries, setPDFentries] = useState([]);
@@ -20,11 +21,15 @@ const ListPDFComponent = () => {
             });
     };
 
+    const handleSearchResults = (results) => {
+        setPDFentries(results);  // Update the displayed PDFs with search results
+    };
+
     const handleDelete = (pdfId) => {
         deletePDF(pdfId)
             .then(() => {
                 setSelectedPDF(null);
-                fetchPDFs();
+                fetchPDFs();  // Refresh list after deleting
             })
             .catch((error) => {
                 console.error("Error deleting PDF:", error);
@@ -32,13 +37,12 @@ const ListPDFComponent = () => {
     };
 
     return (
-        <div style={{display: "flex", flex: 1}}> {/* Ensure the container takes full width */}
+        <div style={{ display: "flex", flex: 1 }}>
             <div style={{flex: 1, paddingRight: "20px"}}>
-                <table className="table table-striped table-bordered"
-                       style={{
-                           width: "100%",  // Ensure the table fills the available space
-                           tableLayout: "auto",  // Adjust layout to auto, so it adjusts based on content
-                       }}>
+                <div style={{marginBottom: '20px'}}>
+                    <SearchBar onSearchResults={handleSearchResults}/>
+                </div>
+                <table className="table table-striped table-bordered" style={{width: "100%"}}>
                     <thead>
                     <tr>
                         <th>File Name</th>
@@ -59,8 +63,8 @@ const ListPDFComponent = () => {
             </div>
 
             {/* PDF Editor */}
-            <div style={{flex: 2}}> {/* Make sure the editor takes more space */}
-                <PDFEditorComponent selectedPDF={selectedPDF} onUpdate={fetchPDFs} handleDelete={handleDelete}/>
+            <div style={{flex: 2}}>
+                <PDFEditorComponent selectedPDF={selectedPDF} onUpdate={fetchPDFs} handleDelete={handleDelete} />
             </div>
         </div>
     );
