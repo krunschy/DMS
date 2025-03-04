@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class RabbitMQSender {
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
+    RabbitTemplate rabbitTemplate;
 
     // Send OCR job to the OCR processing queue, message is the URL
     public void sendOCRJob(String message) {

@@ -21,7 +21,7 @@ public class MinioService {
     private final MinioClient minioClient;
     private static final String BUCKET_NAME = "pdf-bucket"; // Adjust as needed
 
-    public MinioService(@Value("${minio.url}") String minioUrl,
+    public MinioService(MinioClient minioClient, @Value("${minio.url}") String minioUrl,
                         @Value("${minio.rootUser}") String rootUser,
                         @Value("${minio.rootPassword}") String rootPassword) {
         this.minioClient = MinioClient.builder()
