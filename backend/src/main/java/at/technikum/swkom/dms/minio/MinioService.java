@@ -21,13 +21,8 @@ public class MinioService {
     private final MinioClient minioClient;
     private static final String BUCKET_NAME = "pdf-bucket"; // Adjust as needed
 
-    public MinioService(MinioClient minioClient, @Value("${minio.url}") String minioUrl,
-                        @Value("${minio.rootUser}") String rootUser,
-                        @Value("${minio.rootPassword}") String rootPassword) {
-        this.minioClient = MinioClient.builder()
-                .endpoint(minioUrl)
-                .credentials(rootUser, rootPassword)
-                .build();
+    public MinioService(MinioClient minioClient) {
+        this.minioClient = minioClient;
     }
 
     public byte[] downloadFile(String fileName) {

@@ -34,7 +34,7 @@ class MinioServiceTests {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         // Construct the service (its constructor may create a new client internally)
-        minioService = new MinioService(minioClient, "http://localhost:9000", "minioadmin", "minioadmin123");
+        minioService = new MinioService(minioClient);
         // Override the internal client with our mock
         ReflectionTestUtils.setField(minioService, "minioClient", minioClient);
     }

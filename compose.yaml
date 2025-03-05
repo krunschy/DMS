@@ -12,6 +12,8 @@ services:
     depends_on:
       - postgres  # Waits for PostgreSQL to be ready before starting
       - rabbitmq  # Waits for RabbitMQ to be ready before starting
+      - minio
+      - elasticsearch
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/dmsdb
       SPRING_DATASOURCE_USERNAME: user
@@ -111,6 +113,8 @@ services:
     ports:
       - "9200:9200"  # REST API
       - "9300:9300"  # Internal communication
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data  # Mount volume for data persistence
     networks:
       - dms-network  # Network name here
 
@@ -140,3 +144,5 @@ volumes:
   postgres_data:
     name: postgres_data
     driver: local
+  elasticsearch_data:
+    driver: local  # Use the default local volume driver to persist data

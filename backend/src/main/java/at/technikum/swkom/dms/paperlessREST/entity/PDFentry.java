@@ -29,7 +29,7 @@ public class PDFentry {
     @Column(name = "fileSize")
     private String fileSize;
 
-    @Column(name = "fileContent")
+    @Column(name = "fileContent", columnDefinition = "TEXT")
     private String fileContent;
 
     @Column(name = "fileURL", unique = true)

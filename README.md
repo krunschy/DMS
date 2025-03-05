@@ -1,6 +1,9 @@
 [Java Guides YouTube Playlist](https://www.youtube.com/watch?v=KuM6OtuaYRs&list=PLGRDMO4rOGcNLnW1L2vgsExTBg-VPoZHr&ab_channel=JavaGuides)
 
+
 Dem bin ich vor allem gefolgt für sprint 3. Also die routes sind
+
+docker-compose up -d lädt die app nicht gscheit, weil elasticsearch länger braucht zum booten. Also crashts beim ersten mal. Einfach nochmal docker-compose up -d restarted die app und alles läuft
 
 **Base URL:** `(http://localhost:8081)`
 
@@ -38,3 +41,8 @@ select * from pdfs;
 ```./mvnw clean package -Pocr -DskipTests```
 
 um das backend zu baun, skiptests is wichtig, weils sonst keine db hat, und das baut den ocr worker und api service separat
+
+## Tests
+
+```./mvnw clean test``` im backend folder
+
