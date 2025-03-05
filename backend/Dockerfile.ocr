@@ -1,21 +1,15 @@
-# Step 1: Use a JDK 17 image as the base image to build and run the Spring Boot OCR worker app
 FROM openjdk:17-jdk-slim AS build
 
 RUN apt update && apt install -y tesseract-ocr libtesseract-dev
 
-# Step 2: Install Ghostscript
 RUN apt-get update && \
     apt-get install -y ghostscript ca-certificates && \
     apt-get clean
 
-# Step 3: Set the working directory for the app in the container
 WORKDIR /app
 
-# Step 4: Copy the OCR worker JAR file from the appropriate target directory to the container
 COPY target/ocr/*.jar app-ocr-worker.jar
 
-# Step 5: Run the OCR worker Spring Boot application using the JAR file
 ENTRYPOINT ["java", "-jar", "/app/app-ocr-worker.jar"]
 
-# Step 6: Expose port 8082 to allow external access to the OCR worker service
 EXPOSE 8082

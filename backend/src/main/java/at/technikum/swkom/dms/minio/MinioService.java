@@ -5,7 +5,6 @@ import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
 import io.minio.errors.MinioException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,7 +18,7 @@ import java.util.UUID;
 public class MinioService {
 
     private final MinioClient minioClient;
-    private static final String BUCKET_NAME = "pdf-bucket"; // Adjust as needed
+    private static final String BUCKET_NAME = "pdf-bucket";
 
     public MinioService(MinioClient minioClient) {
         this.minioClient = minioClient;

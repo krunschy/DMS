@@ -20,13 +20,11 @@ class DocumentManagementSystemApplicationTests {
 	static class TestConfig {
 		@Bean
 		public PDFDocumentRepository pdfDocumentRepository() {
-			// Return a Mockito mock instance as a dummy bean.
 			return Mockito.mock(PDFDocumentRepository.class);
 		}
 	}
 
 	@Test
 	void contextLoads() {
-		// Your test to simply load the context
 	}
 }

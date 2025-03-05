@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { uploadPDF } from "../services/PDFService"; // Updated to upload PDF file
+import { uploadPDF } from "../services/PDFService";
 
 const UploadPDFButton = () => {
     const [selectedFile, setSelectedFile] = useState(null);
 
     const handleFileChange = (event) => {
-        const file = event.target.files[0]; // Get the selected file
+        const file = event.target.files[0];
         if (!file) return;
 
-        setSelectedFile(file); // Set the file itself, not just metadata
+        setSelectedFile(file);
     };
 
     const handleUploadClick = async () => {
@@ -18,7 +18,7 @@ const UploadPDFButton = () => {
         }
 
         try {
-            await uploadPDF(selectedFile); // Call service to upload the actual file
+            await uploadPDF(selectedFile);
             window.location.reload();
         } catch (error) {
             console.error("Error uploading file:", error);

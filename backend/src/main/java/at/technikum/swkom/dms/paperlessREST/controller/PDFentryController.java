@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin("*")
@@ -29,7 +27,6 @@ public class PDFentryController {
             @RequestParam("fileName") String fileName,
             @RequestParam("fileSize") String fileSize,
             @RequestParam("uploadDate") String uploadDate) {
-            // Upload the PDF file to MinIO
             String fileUrl = minioService.uploadFile(pdfFile);
 
             PDFentryDto savedPDFentry = pdfEntryService.createPDFentry(new PDFentryDto(null, fileName, uploadDate, fileSize, null, fileUrl));
@@ -39,29 +36,24 @@ public class PDFentryController {
             return new ResponseEntity<>("File uploaded successfully: " + fileUrl, HttpStatus.CREATED);
     }
 
-
-    //Build get PDF Rest API
     @GetMapping("{id}")
     public ResponseEntity<PDFentryDto> getPDFentryById(@PathVariable("id") Long Id){
         PDFentryDto pdFentryDto = pdfEntryService.getPDFentryById(Id);
         return ResponseEntity.ok(pdFentryDto);
     }
 
-    //Build getAll PDF
     @GetMapping
     public ResponseEntity<List<PDFentryDto>> getAllPDFentries(){
         List<PDFentryDto> pdfentries = pdfEntryService.getAllPDFentries();
         return ResponseEntity.ok(pdfentries);
     }
 
-    //Build update PDFentry, Das muss noch für content geupped werden, glaub ich
     @PutMapping("{id}")
     public ResponseEntity<PDFentryDto> updatePDFentry(@PathVariable("id") Long Id, @RequestBody PDFentryDto updatedPdfentry) {
         PDFentryDto pdfentryDto = pdfEntryService.updatePDFentryById(Id, updatedPdfentry);
         return ResponseEntity.ok(pdfentryDto);
     }
 
-    //Build delete PDFentry
     @DeleteMapping("{id}")
     public ResponseEntity<String> deletePDFentry(@PathVariable("id") Long Id){
     pdfEntryService.deletePDFentry(Id);
@@ -73,5 +65,4 @@ public class PDFentryController {
         List<PDFDocument> results = PDFDocumentService.searchDocumentsByNameAndContent(query);
         return ResponseEntity.ok(results);
     }
-
 }

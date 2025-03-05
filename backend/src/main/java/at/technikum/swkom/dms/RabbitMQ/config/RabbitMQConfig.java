@@ -9,18 +9,18 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 @Configuration
 public class RabbitMQConfig {
 
-    public static final String PROCESSING_QUEUE_NAME = "pdf-processing-queue"; // Queue for OCR jobs
-    public static final String RESULT_QUEUE_NAME = "ocr_results_queue"; // Queue for OCR results
-    public static final String EXCHANGE_NAME = "pdf-exchange";  // Same exchange name as before
+    public static final String PROCESSING_QUEUE_NAME = "pdf-processing-queue";
+    public static final String RESULT_QUEUE_NAME = "ocr_results_queue";
+    public static final String EXCHANGE_NAME = "pdf-exchange";
 
     @Bean
     public Queue processingQueue() {
-        return new Queue(PROCESSING_QUEUE_NAME, true);  // Durable queue for OCR jobs
+        return new Queue(PROCESSING_QUEUE_NAME, true);
     }
 
     @Bean
     public Queue resultQueue() {
-        return new Queue(RESULT_QUEUE_NAME, true);  // Durable queue for OCR results
+        return new Queue(RESULT_QUEUE_NAME, true);
     }
 
     @Bean

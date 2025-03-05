@@ -36,7 +36,7 @@ export const searchPDFs = (searchText) => {
         params: { query: searchText }
     })
         .then((response) => {
-            return response.data;  // Return the list of matching PDFs
+            return response.data;
         })
         .catch((error) => {
             console.error("Error searching PDFs:", error.response ? error.response.data : error.message);

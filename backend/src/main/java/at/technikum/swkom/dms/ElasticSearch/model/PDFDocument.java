@@ -11,7 +11,7 @@ public class PDFDocument {
     @Id
     private String id;
 
-    @Field(type = FieldType.Text, analyzer = "standard")  // Use standard analyzer to lower case
+    @Field(type = FieldType.Text, analyzer = "standard")
     private String fileName;
     private String uploadDate;
     private String fileSize;

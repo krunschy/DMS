@@ -142,8 +142,6 @@ class PDFentryServiceImplTest {
         verify(pdfDocumentService).save(any(PDFDocument.class));
     }
 
-
-
     @Test
     void testListenToOCRResultsInvalidMessage_NoColon() {
         String invalidMessage = "invalid message";

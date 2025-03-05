@@ -4,13 +4,12 @@ import { updatePDF } from "../services/PDFService.js";
 const PDFEditorComponent = ({ selectedPDF, onUpdate, handleDelete }) => {
     const [editedContent, setEditedContent] = useState(selectedPDF?.fileContent || "");
     const [isOCRProcessing, setIsOCRProcessing] = useState(!selectedPDF?.fileContent);
-    const [isEditing, setIsEditing] = useState(false); // Track if the user wants to edit despite OCR processing
+    const [isEditing, setIsEditing] = useState(false);
 
-    // Update state when a new PDF is selected
     useEffect(() => {
         setEditedContent(selectedPDF?.fileContent || "");
         setIsOCRProcessing(!selectedPDF?.fileContent);
-        setIsEditing(false); // Reset editing state when a new PDF is selected
+        setIsEditing(false);
     }, [selectedPDF]);
 
     const handleSave = () => {
@@ -36,13 +35,12 @@ const PDFEditorComponent = ({ selectedPDF, onUpdate, handleDelete }) => {
         }
     };
 
-    // Show the edit button if OCR is processing
     const handleEditAnyways = () => {
         setIsEditing(true);
     };
 
     if (!selectedPDF) {
-        return <div style={{ flex: 1, padding: "20px" }}></div>; // Display nothing when no PDF is selected
+        return <div style={{ flex: 1, padding: "20px" }}></div>;
     }
 
     return (
@@ -60,7 +58,6 @@ const PDFEditorComponent = ({ selectedPDF, onUpdate, handleDelete }) => {
                 </>
             ) : (
                 <>
-                    {/* Textarea and buttons are enabled if editing */}
                     <textarea
                         style={{ width: "100%", height: "300px", maxWidth: "1200px" }}
                         value={editedContent}

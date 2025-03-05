@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { listPDFs, deletePDF } from "../services/PDFService.js";
 import PDFEditorComponent from "./PDFEditorComponent.jsx";
-import SearchBar from "./SearchBar.jsx";  // Import SearchBar
-
+import SearchBar from "./SearchBar.jsx";
 const ListPDFComponent = () => {
-    const [pdfentries, setPDFentries] = useState([]);  // The currently displayed PDFs
-    const [originalPDFs, setOriginalPDFs] = useState([]);  // Store the original full list of PDFs
+    const [pdfentries, setPDFentries] = useState([]);
+    const [originalPDFs, setOriginalPDFs] = useState([]);
     const [selectedPDF, setSelectedPDF] = useState(null);
 
     useEffect(() => {
@@ -16,7 +15,7 @@ const ListPDFComponent = () => {
         listPDFs()
             .then((response) => {
                 setPDFentries(response.data);
-                setOriginalPDFs(response.data);  // Store the original list
+                setOriginalPDFs(response.data);
             })
             .catch((error) => {
                 console.error("Error fetching PDFs:", error);
@@ -24,18 +23,18 @@ const ListPDFComponent = () => {
     };
 
     const handleSearchResults = (results) => {
-        setPDFentries(results);  // Update the displayed PDFs with search results
+        setPDFentries(results);
     };
 
     const handleReset = () => {
-        setPDFentries(originalPDFs);  // Reset the list to the original state
+        setPDFentries(originalPDFs);
     };
 
     const handleDelete = (pdfId) => {
         deletePDF(pdfId)
             .then(() => {
                 setSelectedPDF(null);
-                fetchPDFs();  // Refresh list after deleting
+                fetchPDFs();
             })
             .catch((error) => {
                 console.error("Error deleting PDF:", error);
@@ -46,7 +45,6 @@ const ListPDFComponent = () => {
         <div style={{ display: "flex", flex: 1 }}>
             <div style={{ flex: 1, paddingRight: "20px" }}>
                 <div style={{ marginBottom: '20px' }}>
-                    {/* Pass handleReset to SearchBar */}
                     <SearchBar onSearchResults={handleSearchResults} onReset={handleReset} />
                 </div>
                 <table className="table table-striped table-bordered" style={{ width: "100%" }}>
@@ -69,7 +67,6 @@ const ListPDFComponent = () => {
                 </table>
             </div>
 
-            {/* PDF Editor */}
             <div style={{ flex: 2 }}>
                 <PDFEditorComponent selectedPDF={selectedPDF} onUpdate={fetchPDFs} handleDelete={handleDelete} />
             </div>

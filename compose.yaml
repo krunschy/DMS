@@ -1,17 +1,16 @@
 version: '3.8'
 
 services:
-  # API Service
   app:
     build:
       context: ./backend
       dockerfile: Dockerfile.api
     container_name: dms-app
     ports:
-      - "8081:8081"  # Exposes the application on port 8081 (host:container)
+      - "8081:8081"
     depends_on:
-      - postgres  # Waits for PostgreSQL to be ready before starting
-      - rabbitmq  # Waits for RabbitMQ to be ready before starting
+      - postgres
+      - rabbitmq
       - minio
       - elasticsearch
     environment:
@@ -22,20 +21,18 @@ services:
     networks:
       - dms-network
 
-  # Frontend Service
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: dms-frontend
     ports:
-      - "80:80"  # Serve on port 80
+      - "80:80"
     depends_on:
       - app
     networks:
       - dms-network
 
-  # PostgreSQL Database
   postgres:
     image: postgres:15
     container_name: dms-db
@@ -51,20 +48,18 @@ services:
     networks:
       - dms-network
 
-  # RabbitMQ Service
   rabbitmq:
     image: rabbitmq:3-management
     container_name: dms-mq
     ports:
-      - "5672:5672"  # RabbitMQ communication
-      - "9093:15672"  # Management UI
+      - "5672:5672"
+      - "9093:15672"
     environment:
       RABBITMQ_DEFAULT_USER: "user"
       RABBITMQ_DEFAULT_PASS: "password"
     networks:
       - dms-network
 
-  # MinIO Service
   minio:
     image: minio/minio:latest
     container_name: minio
@@ -72,8 +67,8 @@ services:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin123
     ports:
-      - "9000:9000" # MinIO
-      - "9090:9001" # MinIO Console
+      - "9000:9000"
+      - "9090:9001"
     volumes:
       - minio_data:/data
     command: server /data --console-address ":9001"
@@ -81,65 +76,62 @@ services:
     networks:
       - dms-network
 
-  # OCR Worker Service
   ocr-worker:
     build:
       context: ./backend
-      dockerfile: Dockerfile.ocr  # Reference the OCR-specific Dockerfile
+      dockerfile: Dockerfile.ocr
     container_name: dms-ocr-worker
     depends_on:
-      - rabbitmq  # The OCR worker may be waiting for RabbitMQ to be available
-      - minio     # If OCR interacts with MinIO for file storage
+      - rabbitmq
+      - minio
     environment:
       SPRING_RABBITMQ_HOST: rabbitmq
-      MINIO_ENDPOINT: minio:9000  # MinIO connection info
+      MINIO_ENDPOINT: minio:9000
       MINIO_ACCESS_KEY: minioadmin
       MINIO_SECRET_KEY: minioadmin123
-      SPRING_PROFILES_ACTIVE: ocr  # Activate the OCR profile
+      SPRING_PROFILES_ACTIVE: ocr
     networks:
       - dms-network
 
-
-  # Elasticsearch Service
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.28
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
-      - xpack.security.enabled=true  # Enable security
-      - ELASTIC_PASSWORD=yourpassword  # Set the password for the "elastic" superuser (or the default user)
-      - ELASTICSEARCH_USERNAME=elastic  # You can still use "elastic" for other purposes
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=yourpassword
+      - ELASTICSEARCH_USERNAME=elastic
     ports:
-      - "9200:9200"  # REST API
-      - "9300:9300"  # Internal communication
+      - "9200:9200"
+      - "9300:9300"
     volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data  # Mount volume for data persistence
+      - elasticsearch_data:/usr/share/elasticsearch/data
     networks:
-      - dms-network  # Network name here
+      - dms-network
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.17.28
     container_name: kibana
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200  # Connect Kibana to Elasticsearch
-      - ELASTICSEARCH_USERNAME=elastic  # Username for authentication
-      - ELASTICSEARCH_PASSWORD=yourpassword  # Password for authentication
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=yourpassword
     ports:
       - "5601:5601"
     networks:
-      - dms-network  # Network name here
+      - dms-network
     depends_on:
       - elasticsearch
-  # Adminer Service
+
   adminer:
     image: adminer:latest
     container_name: dms-adminer
     restart: always
     ports:
-      - "9091:8080"  # Expose Adminer UI on port 8082
+      - "9091:8080"
     networks:
-      - dms-network  # Use the same network as the other services
+      - dms-network
 
 
 networks:
@@ -154,4 +146,4 @@ volumes:
     name: postgres_data
     driver: local
   elasticsearch_data:
-    driver: local  # Use the default local volume driver to persist data
+    driver: local
