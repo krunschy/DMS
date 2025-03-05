@@ -1,5 +1,7 @@
 package at.technikum.swkom.dms.paperlessREST.controller;
 
+import at.technikum.swkom.dms.ElasticSearch.model.PDFDocument;
+import at.technikum.swkom.dms.ElasticSearch.service.PDFDocumentService;
 import at.technikum.swkom.dms.paperlessREST.dto.PDFentryDto;
 import at.technikum.swkom.dms.minio.MinioService;
 import at.technikum.swkom.dms.paperlessREST.service.PDFentryService;
@@ -21,12 +23,6 @@ public class PDFentryController {
     private PDFentryService pdfEntryService;
     private MinioService minioService;
 
-    //Build add PDF REST API
-    /*@PostMapping
-    public ResponseEntity<PDFentryDto> createPDFentry(@RequestBody PDFentryDto pdFentryDto){
-        PDFentryDto savedPDFentry = pdfEntryService.createPDFentry(pdFentryDto);
-        return new ResponseEntity<>(savedPDFentry, HttpStatus.CREATED);
-    }*/
     @PostMapping
     public ResponseEntity<String> uploadPDF(
             @RequestParam("pdfFile") MultipartFile pdfFile,
@@ -71,4 +67,11 @@ public class PDFentryController {
     pdfEntryService.deletePDFentry(Id);
     return ResponseEntity.ok("PDF deleted successfully");
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<PDFDocument>> searchPDFs(@RequestParam String query) {
+        List<PDFDocument> results = PDFDocumentService.searchDocumentsByNameAndContent(query);
+        return ResponseEntity.ok(results);
+    }
+
 }

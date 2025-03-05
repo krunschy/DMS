@@ -4,7 +4,8 @@ import PDFEditorComponent from "./PDFEditorComponent.jsx";
 import SearchBar from "./SearchBar.jsx";  // Import SearchBar
 
 const ListPDFComponent = () => {
-    const [pdfentries, setPDFentries] = useState([]);
+    const [pdfentries, setPDFentries] = useState([]);  // The currently displayed PDFs
+    const [originalPDFs, setOriginalPDFs] = useState([]);  // Store the original full list of PDFs
     const [selectedPDF, setSelectedPDF] = useState(null);
 
     useEffect(() => {
@@ -15,6 +16,7 @@ const ListPDFComponent = () => {
         listPDFs()
             .then((response) => {
                 setPDFentries(response.data);
+                setOriginalPDFs(response.data);  // Store the original list
             })
             .catch((error) => {
                 console.error("Error fetching PDFs:", error);
@@ -23,6 +25,10 @@ const ListPDFComponent = () => {
 
     const handleSearchResults = (results) => {
         setPDFentries(results);  // Update the displayed PDFs with search results
+    };
+
+    const handleReset = () => {
+        setPDFentries(originalPDFs);  // Reset the list to the original state
     };
 
     const handleDelete = (pdfId) => {
@@ -38,11 +44,12 @@ const ListPDFComponent = () => {
 
     return (
         <div style={{ display: "flex", flex: 1 }}>
-            <div style={{flex: 1, paddingRight: "20px"}}>
-                <div style={{marginBottom: '20px'}}>
-                    <SearchBar onSearchResults={handleSearchResults}/>
+            <div style={{ flex: 1, paddingRight: "20px" }}>
+                <div style={{ marginBottom: '20px' }}>
+                    {/* Pass handleReset to SearchBar */}
+                    <SearchBar onSearchResults={handleSearchResults} onReset={handleReset} />
                 </div>
-                <table className="table table-striped table-bordered" style={{width: "100%"}}>
+                <table className="table table-striped table-bordered" style={{ width: "100%" }}>
                     <thead>
                     <tr>
                         <th>File Name</th>
@@ -52,7 +59,7 @@ const ListPDFComponent = () => {
                     </thead>
                     <tbody>
                     {pdfentries.map((pdf) => (
-                        <tr key={pdf.id} onClick={() => setSelectedPDF(pdf)} style={{cursor: "pointer"}}>
+                        <tr key={pdf.id} onClick={() => setSelectedPDF(pdf)} style={{ cursor: "pointer" }}>
                             <td>{pdf.fileName}</td>
                             <td>{pdf.uploadDate}</td>
                             <td>{pdf.fileSize}</td>
@@ -63,7 +70,7 @@ const ListPDFComponent = () => {
             </div>
 
             {/* PDF Editor */}
-            <div style={{flex: 2}}>
+            <div style={{ flex: 2 }}>
                 <PDFEditorComponent selectedPDF={selectedPDF} onUpdate={fetchPDFs} handleDelete={handleDelete} />
             </div>
         </div>

@@ -131,6 +131,15 @@ services:
       - dms-network  # Network name here
     depends_on:
       - elasticsearch
+  # Adminer Service
+  adminer:
+    image: adminer:latest
+    container_name: dms-adminer
+    restart: always
+    ports:
+      - "9091:8080"  # Expose Adminer UI on port 8082
+    networks:
+      - dms-network  # Use the same network as the other services
 
 
 networks:
