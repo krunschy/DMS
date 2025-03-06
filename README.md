@@ -1,9 +1,8 @@
-[Java Guides YouTube Playlist](https://www.youtube.com/watch?v=KuM6OtuaYRs&list=PLGRDMO4rOGcNLnW1L2vgsExTBg-VPoZHr&ab_channel=JavaGuides)
+docker-compose up -d lädt die app und den OCR nicht gscheit, weil elasticsearch länger braucht zum booten.
+Lösung derweil: docker-compose up -d -> app und ocr stoppen -> docker-compose up -d
 
 
-Dem bin ich vor allem gefolgt für sprint 3. Also die routes sind
-
-docker-compose up -d lädt die app nicht gscheit, weil elasticsearch länger braucht zum booten. Also crashts beim ersten mal. Einfach nochmal docker-compose up -d restarted die app und alles läuft
+Die routes sind
 
 **Base URL:** `(http://localhost:8081)`
 
