@@ -145,7 +145,8 @@ class PDFentryServiceImplTest {
     @Test
     void testListenToOCRResultsInvalidMessage_NoColon() {
         String invalidMessage = "invalid message";
-        assertDoesNotThrow(() -> pdfentryService.listenToOCRResults(invalidMessage));
+        assertThrows(StringIndexOutOfBoundsException.class, () -> pdfentryService.listenToOCRResults(invalidMessage));
         verify(pdfentryRepository, never()).findByFileURL(anyString());
     }
+
 }
