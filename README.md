@@ -1,8 +1,8 @@
-docker-compose up -d lädt die app und den OCR nicht gscheit, weil elasticsearch länger braucht zum booten.
-Lösung derweil: docker-compose up -d -> app und ocr stoppen -> docker-compose up -d
+If it doesn't work after docker-compose up, restart the app and/or the ocr-worker container.
+Although they depend on the other containers through the compose.yaml, it can sometimes happen, that the other containers are not ready for the connection yet, causing this issue.
 
 
-Die routes sind
+The routes:
 
 **Base URL:** `(http://localhost:8081)`
 
@@ -17,16 +17,13 @@ Die routes sind
   - **PUT:** updated den Eintrag, braucht json im body
   - **DELETE:** löscht den Eintrag
 
-**Check die Datenbank mit:**
+- **/api/PDFentries/search**
+  - **GET:** leitet den query parameter an Elastic Search für die Suche weiter und returned die entsprechenden jsons.
 
-```bash
-docker exec -it dms-db psql -U user -d dmsdb
-select * from pdfs;
-```
 
----
 
 ## Frontend
+Accessible over localhost:80
 
 ```npm run dev``` um das frontent zu entwickeln
 
@@ -39,9 +36,10 @@ select * from pdfs;
 
 ```./mvnw clean package -Pocr -DskipTests```
 
-um das backend zu baun, skiptests is wichtig, weils sonst keine db hat, und das baut den ocr worker und api service separat
+um das backend zu baun
 
 ## Tests
 
 ```./mvnw clean test``` im backend folder
 
+Will man nach den tests "docker-compose build" machen, muss man die commands, die das backend zu bauen, erneut durchführen.
